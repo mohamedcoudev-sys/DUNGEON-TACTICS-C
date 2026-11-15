@@ -5,12 +5,10 @@
 #define ECHEC_CRITIQUE 1
 #define REUSSITE_CRITIQUE 20
 
-/* Initialise le generateur aleatoire (a appeler une seule fois au debut) */
 void initialiserAleatoire(void) {
     srand((unsigned int)time(NULL));
 }
 
-/* Lance un de a "faces" faces : retourne un nombre entre 1 et faces */
 int lancerDe(int faces) {
     if (faces < 1) {
         return 0;
@@ -18,7 +16,6 @@ int lancerDe(int faces) {
     return rand() % faces + 1;
 }
 
-/* Retourne un nombre aleatoire entre min et max (inclus) */
 int nombreEntre(int min, int max) {
     if (max < min) {
         return min;
@@ -26,12 +23,10 @@ int nombreEntre(int min, int max) {
     return min + rand() % (max - min + 1);
 }
 
-/* Initiative = d20 + bonus d'initiation du combattant */
 int jetInitiative(combattant c) {
     return lancerDe(20) + c.initiation;
 }
 
-/* Jet d'attaque : 1 = rate, 20 = critique, 10 ou plus = reussi */
 ResultatAttaque jetAttaque(void) {
     int jet = lancerDe(20);
 
@@ -47,7 +42,6 @@ ResultatAttaque jetAttaque(void) {
     return ATTAQUE_RATEE;
 }
 
-/* Degats de l'arme selon le resultat (rate = 0, critique = x2) */
 int calculerDegats(Arme arme, ResultatAttaque resultat) {
     int degats;
 
@@ -64,14 +58,11 @@ int calculerDegats(Arme arme, ResultatAttaque resultat) {
 }
 
 
-/* ===================== MANA ===================== */
 
-/* Un sort coute COUT_SORT points de pouvoir */
 int peutLancerSort(combattant c) {
     return c.pp >= COUT_SORT;
 }
 
-/* PP restants apres un sort (jamais en dessous de 0) */
 int ppApresSort(int pp) {
     pp = pp - COUT_SORT;
     if (pp < 0) {
@@ -80,7 +71,6 @@ int ppApresSort(int pp) {
     return pp;
 }
 
-/* PP apres la regeneration de fin de tour (jamais plus de PP_MAX) */
 int ppApresRegeneration(int pp) {
     pp = pp + REGEN_PP;
     if (pp > PP_MAX) {
@@ -89,20 +79,16 @@ int ppApresRegeneration(int pp) {
     return pp;
 }
 
-/* Un sort touche toujours et fait le double des degats de l'arme */
 int degatsSort(Arme arme) {
     return nombreEntre(arme.degats_min, arme.degats_max) * 2;
 }
 
-/* ================== TOUR PAR TOUR ================== */
 
 int estMort(combattant c) {
     return c.pv_actuel <= 0;
 }
 
-/* Retourne ACTION_ATTAQUE ou ACTION_SORT.
-   manuel = 1 : le joueur choisit au clavier
-   manuel = 0 : choix automatique (sort s'il reste assez de PP) */
+
 int choisirAction(combattant c, int manuel) {
     int choix = ACTION_ATTAQUE;
 
@@ -126,10 +112,7 @@ int choisirAction(combattant c, int manuel) {
     return choix;
 }
 
-/* Execute UNE action (attaque ou sort) de attaquant sur cible.
-   Les PV de la cible et les PP de l'attaquant sont mis a jour dans equipe[].
-   Le texte decrivant ce qui s'est passe est ecrit dans message[].
-   Cette fonction n'affiche rien : la console ou SDL affichent le message. */
+
 void executerAction(combattant equipe[], int attaquant, int cible, int action, char message[]) {
     int degats;
     ResultatAttaque res;
@@ -164,18 +147,15 @@ void executerAction(combattant equipe[], int attaquant, int cible, int action, c
     }
 }
 
-/* Fin d'un tour complet (heros + monstre) : regeneration du mana */
 void finDeTour(combattant equipe[]) {
     equipe[HEROS].pp = ppApresRegeneration(equipe[HEROS].pp);
     equipe[MONSTRE].pp = ppApresRegeneration(equipe[MONSTRE].pp);
 }
 
-/* Version console : choisit l'action, l'execute et affiche le resultat */
 void jouerTour(combattant equipe[], int attaquant, int cible, int manuel) {
     int action;
     char message[TAILLE_MESSAGE];
 
-    /* seul le heros peut etre controle au clavier */
     if (attaquant != HEROS) {
         manuel = 0;
     }
@@ -188,7 +168,6 @@ void jouerTour(combattant equipe[], int attaquant, int cible, int manuel) {
            equipe[cible].pv_actuel, equipe[cible].pv_max);
 }
 
-/* Boucle principale du combat. Retourne HEROS ou MONSTRE (le vainqueur) */
 int jouerCombat(combattant equipe[], int manuel) {
     int initHeros;
     int initMonstre;

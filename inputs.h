@@ -3,15 +3,13 @@
 
 #include <SDL2/SDL.h>
 
-/* Ce que le joueur a demande pendant cette image */
 #define ENTREE_RIEN 0
 #define ENTREE_QUITTER 1
 #define ENTREE_ATTAQUER 2
 #define ENTREE_SOIGNER 3
 #define ENTREE_VOL_DE_VIE 4
 
-/* Zones cliquables des boutons (en pixels).
-   graphics.c dessine les boutons a ces memes positions. */
+
 #define Y_BOUTON 530
 #define HAUTEUR_BOUTON 40
 #define LARGEUR_BOUTON 150

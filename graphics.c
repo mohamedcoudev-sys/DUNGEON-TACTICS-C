@@ -5,7 +5,6 @@
 #define CHEMIN_POLICE "assets/font.ttf"
 #define TAILLE_POLICE 16
 
-/* ================= INITIALISATION ================= */
 
 Graphique initialiserGraphique(void) {
     Graphique g;
@@ -36,7 +35,6 @@ Graphique initialiserGraphique(void) {
         return g;
     }
 
-    /* On essaie la carte graphique, sinon le dessin logiciel */
     g.rendu = SDL_CreateRenderer(g.fenetre, -1, SDL_RENDERER_ACCELERATED);
     if (g.rendu == NULL) {
         g.rendu = SDL_CreateRenderer(g.fenetre, -1, SDL_RENDERER_SOFTWARE);
@@ -53,14 +51,12 @@ Graphique initialiserGraphique(void) {
     return g;
 }
 
-/* Vrai si la fenetre, le rendu et la police sont tous prets */
 int graphiqueValide(Graphique g)
 {
     return g.fenetre != NULL && g.rendu != NULL && g.police != NULL;
 }
 
-/* On ferme dans l'ordre inverse de la creation.
-   Les tests NULL permettent d'appeler cette fonction apres une init partielle. */
+
 void libererGraphique(Graphique g)
 {
     if (g.police != NULL) {
@@ -77,7 +73,6 @@ void libererGraphique(Graphique g)
     SDL_Quit();
 }
 
-/* ================= GRILLES ================= */
 
 void initialiserPlateau(int plateau[LIGNES][COLONNES])
 {
@@ -101,9 +96,7 @@ void initialiserEntites(int entites[LIGNES][COLONNES])
     }
 }
 
-/* ================= OUTILS DE DESSIN ================= */
 
-/* Fond noir */
 void effacerEcran(Graphique g)
 {
     SDL_SetRenderDrawColor(g.rendu, 0, 0, 0, 255);
@@ -115,7 +108,6 @@ void afficherEcran(Graphique g)
     SDL_RenderPresent(g.rendu);
 }
 
-/* Contour blanc d'un rectangle */
 void dessinerCadre(Graphique g, int x, int y, int largeur, int hauteur)
 {
     SDL_Rect r;
@@ -128,7 +120,6 @@ void dessinerCadre(Graphique g, int x, int y, int largeur, int hauteur)
     SDL_RenderDrawRect(g.rendu, &r);
 }
 
-/* Texte blanc : surface, puis texture, puis affichage. On libere les deux ensuite */
 void dessinerTexte(Graphique g, const char *texte, int x, int y)
 {
     SDL_Color blanc = {255, 255, 255, 255};
@@ -161,20 +152,16 @@ void dessinerTexte(Graphique g, const char *texte, int x, int y)
     SDL_DestroyTexture(texture);
 }
 
-/* ================= BANDEAU DU HAUT ================= */
 
-/* tour : texte affiche a droite (ex : "Tour : Héros") */
 void dessinerBandeau(Graphique g, const char *tour)
 {
     dessinerCadre(g, 10, 10, 880, 50);
     dessinerTexte(g, "[ DONJON & DRAGONS - TOUR PAR TOUR ]", 25, 25);
     dessinerTexte(g, tour, 640, 25);
 
-    /* Grand cadre du milieu (carte + plateau) */
     dessinerCadre(g, 10, 70, 880, 440);
 }
 
-/* ================= CARTE DE COMBATTANT (a gauche) ================= */
 
 void dessinerCarte(Graphique g, combattant c, int estHeros)
 {
@@ -193,7 +180,7 @@ void dessinerCarte(Graphique g, combattant c, int estHeros)
         dessinerTexte(g, "MONSTRE ]", 113, 205);
     }
 
-    /* Statistiques */
+     
     sprintf(texte, "Nom   : %s", c.nom);
     dessinerTexte(g, texte, 45, 325);
 
@@ -214,11 +201,7 @@ void dessinerCarte(Graphique g, combattant c, int estHeros)
     dessinerTexte(g, texte, 45, 445);
 }
 
-/* ================= PLATEAU (a droite) ================= */
 
-/* Une case en (ligne l, colonne c) est ecrite en pixels a
-   x = X_PLATEAU + c * LARGEUR_CASE et y = Y_PLATEAU + l * HAUTEUR_CASE.
-   Ici on ecrit seulement les coordonnees "( c,l )" de chaque case. */
 void dessinerPlateau(Graphique g, int plateau[LIGNES][COLONNES])
 {
     int l, c, x, y;
@@ -241,8 +224,7 @@ void dessinerPlateau(Graphique g, int plateau[LIGNES][COLONNES])
     }
 }
 
-/* Sous les coordonnees : [H] + nom, [M] + nom, ou [ . ] si la case est vide.
-   entites[l][c] vaut CASE_VIDE, ou l'indice du combattant dans equipe[] */
+
 void dessinerEntites(Graphique g, int entites[LIGNES][COLONNES], combattant equipe[])
 {
     int l, c, i, x, y;
@@ -269,7 +251,6 @@ void dessinerEntites(Graphique g, int entites[LIGNES][COLONNES], combattant equi
     }
 }
 
-/* ================= JET DE DES (sous le plateau) ================= */
 
 void dessinerJet(Graphique g, const char *message)
 {
@@ -277,10 +258,7 @@ void dessinerJet(Graphique g, const char *message)
     dessinerTexte(g, message, 320, 430);
 }
 
-/* ================= BOUTONS (en bas) ================= */
 
-/* Les positions viennent de inputs.h : le texte est dessine
-   exactement la ou inputs.c detecte les clics */
 void dessinerBoutons(Graphique g)
 {
     dessinerCadre(g, 10, 520, 880, 60);
