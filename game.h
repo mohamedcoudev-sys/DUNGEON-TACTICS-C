@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Positions dans le tableau equipe[] */
+#define HEROS 0
+#define MONSTRE 1
+
 /* Structure et enumeration des armes, monstres et heros */
 
 typedef enum

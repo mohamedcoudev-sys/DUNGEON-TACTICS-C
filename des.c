@@ -126,41 +126,35 @@ int choisirAction(combattant c, int manuel) {
     return choix;
 }
 
-/* Un combattant (attaquant) agit contre l'autre (cible).
-   equipe[] est un tableau : equipe[HEROS] et equipe[MONSTRE] */
-void jouerTour(combattant equipe[], int attaquant, int cible, int manuel) {
-    int action;
+/* Execute UNE action (attaque ou sort) de attaquant sur cible.
+   Les PV de la cible et les PP de l'attaquant sont mis a jour dans equipe[].
+   Le texte decrivant ce qui s'est passe est ecrit dans message[].
+   Cette fonction n'affiche rien : la console ou SDL affichent le message. */
+void executerAction(combattant equipe[], int attaquant, int cible, int action, char message[]) {
     int degats;
     ResultatAttaque res;
-
-    /* seul le heros peut etre controle au clavier */
-    if (attaquant != HEROS) {
-        manuel = 0;
-    }
-
-    action = choisirAction(equipe[attaquant], manuel);
 
     if (action == ACTION_SORT) {
         degats = degatsSort(equipe[attaquant].arme);
         equipe[attaquant].pp = ppApresSort(equipe[attaquant].pp);
-        printf("%s lance un sort sur %s : %d degats (PP restants : %d)\n",
-               equipe[attaquant].nom, equipe[cible].nom, degats,
-               equipe[attaquant].pp);
+        sprintf(message, "%s lance un sort sur %s : %d degats (PP restants : %d)",
+                equipe[attaquant].nom, equipe[cible].nom, degats,
+                equipe[attaquant].pp);
     }
     else {
         res = jetAttaque();
         degats = calculerDegats(equipe[attaquant].arme, res);
         if (res == ATTAQUE_RATEE) {
-            printf("%s attaque %s et rate\n",
-                   equipe[attaquant].nom, equipe[cible].nom);
+            sprintf(message, "%s attaque %s et rate",
+                    equipe[attaquant].nom, equipe[cible].nom);
         }
         else if (res == ATTAQUE_CRITIQUE) {
-            printf("%s attaque %s : COUP CRITIQUE ! %d degats\n",
-                   equipe[attaquant].nom, equipe[cible].nom, degats);
+            sprintf(message, "%s attaque %s : COUP CRITIQUE ! %d degats",
+                    equipe[attaquant].nom, equipe[cible].nom, degats);
         }
         else {
-            printf("%s attaque %s : %d degats\n",
-                   equipe[attaquant].nom, equipe[cible].nom, degats);
+            sprintf(message, "%s attaque %s : %d degats",
+                    equipe[attaquant].nom, equipe[cible].nom, degats);
         }
     }
 
@@ -168,6 +162,28 @@ void jouerTour(combattant equipe[], int attaquant, int cible, int manuel) {
     if (equipe[cible].pv_actuel < 0) {
         equipe[cible].pv_actuel = 0;
     }
+}
+
+/* Fin d'un tour complet (heros + monstre) : regeneration du mana */
+void finDeTour(combattant equipe[]) {
+    equipe[HEROS].pp = ppApresRegeneration(equipe[HEROS].pp);
+    equipe[MONSTRE].pp = ppApresRegeneration(equipe[MONSTRE].pp);
+}
+
+/* Version console : choisit l'action, l'execute et affiche le resultat */
+void jouerTour(combattant equipe[], int attaquant, int cible, int manuel) {
+    int action;
+    char message[TAILLE_MESSAGE];
+
+    /* seul le heros peut etre controle au clavier */
+    if (attaquant != HEROS) {
+        manuel = 0;
+    }
+
+    action = choisirAction(equipe[attaquant], manuel);
+    executerAction(equipe, attaquant, cible, action, message);
+
+    printf("%s\n", message);
     printf("   %s : %d/%d PV\n", equipe[cible].nom,
            equipe[cible].pv_actuel, equipe[cible].pv_max);
 }
@@ -200,9 +216,7 @@ int jouerCombat(combattant equipe[], int manuel) {
             jouerTour(equipe, second, premier, manuel);
         }
 
-        /* fin du tour : regeneration du mana */
-        equipe[HEROS].pp = ppApresRegeneration(equipe[HEROS].pp);
-        equipe[MONSTRE].pp = ppApresRegeneration(equipe[MONSTRE].pp);
+        finDeTour(equipe);
     }
 
     if (estMort(equipe[HEROS])) {

@@ -8,9 +8,8 @@
 #define PP_MAX 10
 #define REGEN_PP 1
 
-/* Positions dans le tableau equipe[] */
-#define HEROS 0
-#define MONSTRE 1
+/* Taille maximale d'un message de combat (ex: "Arthur attaque Gobelin : 8 degats") */
+#define TAILLE_MESSAGE 200
 
 /* Actions possibles pendant un tour */
 #define ACTION_ATTAQUE 1
@@ -39,6 +38,8 @@ int degatsSort(Arme arme);
 /* Tour par tour */
 int estMort(combattant c);
 int choisirAction(combattant c, int manuel);
+void executerAction(combattant equipe[], int attaquant, int cible, int action, char message[]);
+void finDeTour(combattant equipe[]);
 void jouerTour(combattant equipe[], int attaquant, int cible, int manuel);
 int jouerCombat(combattant equipe[], int manuel);
 
