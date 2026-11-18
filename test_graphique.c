@@ -1,7 +1,6 @@
 #include "graphics.h"
 
-/* Ouvre la fenetre avec le plateau, le heros (bleu) et le monstre (rouge).
-   Fermer la fenetre pour quitter. */
+
 int main(int argc, char *argv[])
 {
     Graphique g;

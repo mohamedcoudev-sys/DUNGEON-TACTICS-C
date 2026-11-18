@@ -1,6 +1,5 @@
 #include "game.h"
 
-/* Statistiques de depart */
 #define HERO_PV 100
 #define HERO_PP 6
 #define HERO_INITIATION 3
@@ -9,7 +8,6 @@
 #define MONSTRE_PP 4
 #define MONSTRE_INITIATION 1
 
-/* Cree une arme avec ses degats selon son type */
 Arme initialiserArme(TypeArme type)
 {
     Arme arme;
@@ -50,7 +48,6 @@ Arme initialiserArme(TypeArme type)
     return arme;
 }
 
-/* Remplit toutes les statistiques d'un combattant (PV pleins, 0 xp) */
 combattant initialiserStatistiques(const char *nom, Arme arme, int pv, int pp, int initiation)
 {
     combattant c;
@@ -69,11 +66,11 @@ combattant initialiserStatistiques(const char *nom, Arme arme, int pv, int pp, i
 combattant initialiserHero(const char *nom, TypeArme typearme)
 {
     return initialiserStatistiques(nom, initialiserArme(typearme),
-                                   HERO_PV, HERO_PP, HERO_INITIATION);
+    HERO_PV, HERO_PP, HERO_INITIATION);
 }
 
 combattant initialiserMonstre(const char *nom, TypeArme typearme)
 {
     return initialiserStatistiques(nom, initialiserArme(typearme),
-                                   MONSTRE_PV, MONSTRE_PP, MONSTRE_INITIATION);
+    MONSTRE_PV, MONSTRE_PP, MONSTRE_INITIATION);
 }

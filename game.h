@@ -5,11 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Positions dans le tableau equipe[] */
 #define HEROS 0
 #define MONSTRE 1
 
-/* Structure et enumeration des armes, monstres et heros */
 
 typedef enum
 {
@@ -27,8 +25,6 @@ typedef struct
     int degats_max;
 } Arme;
 
-/* Structure pour un monstre ou un heros
-   pp = points de pouvoir (mana), utilises pour lancer des sorts */
 
 typedef struct
 {
@@ -41,9 +37,7 @@ typedef struct
     int initiation;
 } combattant;
 
-/* Fonctions d'initialisation du module game.
-   Elles retournent la structure creee (pas de pointeur a manipuler) :
-   hero = initialiserHero("Arthur", ARME_EPEE); */
+
 
 Arme initialiserArme(TypeArme type);
 combattant initialiserStatistiques(const char *nom, Arme arme, int pv, int pp, int initiation);

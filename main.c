@@ -4,7 +4,6 @@
 
 #define DELAI_MONSTRE 800
 
-/* Position de depart des combattants sur la grille (ligne, colonne) */
 #define LIGNE_HEROS 0
 #define COL_HEROS 0
 #define LIGNE_MONSTRE 1
@@ -31,7 +30,6 @@ int main(int argc, char *argv[])
 
     initialiserAleatoire();
 
-    /* ---------- Initialisation ---------- */
     g = initialiserGraphique();
     if (!graphiqueValide(g)) {
         libererGraphique(g);
@@ -45,7 +43,6 @@ int main(int argc, char *argv[])
     entites[LIGNE_HEROS][COL_HEROS] = HEROS;
     entites[LIGNE_MONSTRE][COL_MONSTRE] = MONSTRE;
 
-    /* L'initiative decide qui joue en premier */
     if (jetInitiative(equipe[HEROS]) >= jetInitiative(equipe[MONSTRE])) {
         premier = HEROS;
     }
@@ -56,18 +53,15 @@ int main(int argc, char *argv[])
     tempsMonstre = SDL_GetTicks() + DELAI_MONSTRE;
     sprintf(message, "%s joue en premier", equipe[premier].nom);
 
-    /* ---------- Boucle principale (environ 60 images par seconde) ---------- */
     while (continuer) {
         action = 0;
 
-        /* 1. Evenements : tout est lu dans inputs.c */
         entree = lireEntree();
 
         if (entree == ENTREE_QUITTER) {
             continuer = 0;
         }
 
-        /* Les boutons ne marchent que pendant le tour du heros */
         if (!combatFini && actif == HEROS) {
             if (entree == ENTREE_ATTAQUER) {
                 action = ACTION_ATTAQUE;
@@ -80,7 +74,6 @@ int main(int argc, char *argv[])
             }
         }
 
-        /* 2. Mise a jour : le monstre joue tout seul apres une courte pause */
         if (!combatFini && actif == MONSTRE && SDL_GetTicks() >= tempsMonstre) {
             action = choisirAction(equipe[MONSTRE], 0);
         }
@@ -106,7 +99,6 @@ int main(int argc, char *argv[])
             }
         }
 
-        /* 3. Texte en haut a droite */
         if (combatFini) {
             if (estMort(equipe[MONSTRE])) {
                 sprintf(tour, "VICTOIRE !");
@@ -122,7 +114,6 @@ int main(int argc, char *argv[])
             sprintf(tour, "Tour : Monstre");
         }
 
-        /* 4. Dessin */
         effacerEcran(g);
         dessinerBandeau(g, tour);
         dessinerCarte(g, equipe[actif], actif == HEROS);

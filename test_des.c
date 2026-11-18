@@ -13,11 +13,9 @@ int main(void) {
 
     initialiserAleatoire();
 
-    /* Creation des combattants avec les fonctions de game.c */
     hero = initialiserHero("Arthur", ARME_EPEE);
     monstre = initialiserMonstre("Gobelin", ARME_LANCE);
 
-    /* TEST 1 : le de est-il equilibre ? 6000 lancers de d6 */
     printf("--- Test 1 : 6000 lancers de d6 ---\n");
     for (i = 0; i < 6000; i++) {
         compteur[lancerDe(6) - 1]++;
@@ -26,7 +24,6 @@ int main(void) {
         printf("Face %d : %d fois\n", i + 1, compteur[i]);
     }
 
-    /* TEST 2 : initiative */
     printf("\n--- Test 2 : initiative ---\n");
     initHero = jetInitiative(hero);
     initMonstre = jetInitiative(monstre);
@@ -38,7 +35,6 @@ int main(void) {
         printf("%s joue en premier\n", monstre.nom);
     }
 
-    /* TEST 3 : 10 attaques du heros */
     printf("\n--- Test 3 : 10 attaques de %s ---\n", hero.nom);
     for (i = 0; i < 10; i++) {
         res = jetAttaque();
@@ -54,7 +50,6 @@ int main(void) {
         }
     }
 
-    /* TEST 4 : combat complet (0 = automatique, 1 = le joueur choisit) */
     printf("\n--- Test 4 : combat complet ---\n");
     equipe[HEROS] = hero;
     equipe[MONSTRE] = monstre;
